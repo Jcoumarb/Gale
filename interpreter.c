@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define INITIAL_BUFFER_SIZE 1024
 #define INITIAL_ARRAY_SIZE 10
