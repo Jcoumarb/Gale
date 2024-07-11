@@ -20,29 +20,23 @@ void add_line(char ***lines, size_t *size, size_t *capacity, char *line) {
     	(*size)++;
 }
 
-int main(int argc, char* argv[]) {
+void runFile(char* path) {
 
-//*** This first section is designed to grab the data from teh program file and save it in an array called 'galeFile' ***
-	
-	//if the file path was not added exit with a message
-	if(argc != 2) {
-		printf("no file path provided\n");
+	printf("execute '%s' (it currently just reads and stores the script from path)\n", path);
+
+	// creates pointer to read file or exits if there is an issue
+	FILE *file = fopen(path, "r");
+	if ( file == NULL) {
+		perror("Error opening file");
 		exit(1);
 	}
-	
-	FILE *file = fopen(argv[1], "r");
-	
-	//if there is an issue opening the file exit with a message
-    	if (file == NULL) {
-        	perror("Error opening file");
-        	exit(1);
-    	}
+
 
 	// Initialize variables for line reading and storage
     	char **galeFile = malloc(INITIAL_ARRAY_SIZE * sizeof(char *));
     	if (galeFile == NULL) {
         	perror("Failed to allocate memory");
-        	return 1;
+        	exit(1);
     	}
 
     	size_t size = 0, capacity = INITIAL_ARRAY_SIZE;
@@ -62,5 +56,70 @@ int main(int argc, char* argv[]) {
 
     	free(line);
     	fclose(file);
-//*********************************************************************************************************************
+
+	//What we are left with at this point is a pointer called 'galeFile' that holds all the characters (script)from the file
+}
+
+void runPrompt() {
+	printf("*** Gale Interactive Execution Mode ***\n");
+
+	char *buffer = NULL;
+    	size_t bufsize = 0;
+
+    	while (1) {
+        
+		// Prompt the user for input
+        	printf(">> ");
+
+        	// Use getline to read the line
+        	ssize_t len = getline(&buffer, &bufsize, stdin);
+        	if (len != -1) {
+            		// Remove the newline character, if present
+            		if (buffer[len - 1] == '\n') {
+                	buffer[len - 1] = '\0';
+            		}
+
+			//checks for empty line to break
+			if(len == 1) {
+				break;
+			}
+
+            		// Check for the exit condition
+            		if (strcmp(buffer, "exit") == 0) {
+                		break;
+            		}
+
+            		// Print the stored line
+            		printf("execute '%s' (it currently just reads and displays the entered line)\n", buffer);
+
+		} else {
+            		printf("Error reading input.\n");
+            		break;
+        	}
+	}
+
+    	// Free the allocated memory
+	free(buffer);
+}	
+int main(int argc, char* argv[]) {
+
+	//                                  *** Argument Handling ***
+
+	// if more than one argument besides the executable file name is passed the program exits
+	if(argc > 2) {
+		printf("Usage: gale [script]\n");
+		exit(1);
+	}
+	
+	// if one line argument besides the executable is passed the file path is read and that script is executed
+	else if(argc == 2) {
+		runFile(argv[1]);
+	}
+
+	// if there are no arguments, it allows the user to run their code interactively and execute line by line through the terminal
+	else{
+		runPrompt();
+	}
+
+	//*********************************************************************************************************
 }
