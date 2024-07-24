@@ -6,7 +6,6 @@
 . Static Analysis -  a few things occur here: determine scope declared variables; connect the name of said variables to their declarations; type checking of said variables; storage of this collected data (usually stored in syntax tree, symbol chart, or creation of a new tree that represents this)
 
 ## Apparently, the steps up till now are considered the front-end of implementation
-
 . Intermediate Representation - I don't this this is relevant to our project as we are strictly interpreting to be compiled in one language 'C' and this step is about translating everything up till now into a more 'platform agnostic' format
 
 . Optimization - this step takes the written code and alters it at compile time to make the execution faster (ex: user makes a variable equal to an expression and we solve said expression in this step and reassign the variable to the solution)
@@ -16,3 +15,45 @@
 . VM - Putting this here in case we go this route. To circle back to Code generation, if we go down the route of generating an executable, I think that the biggest thing here is that we will have to write our script to generate an executable for Windows vs Unix as it has a different c compiler from macOS and Linux
 
 . Runtime - Services that occur during the life of the execution like garbage collection
+
+# Tokenization:
+## example
+```javascript
+//in this line
+var language = "gale";
+
+//the tokens are:
+'var', 'language', '=', '"gale"', ';'
+```
+
+## Struct
+. It makes sense to make a series of structs holding data for each token
+
+. These structs may be referenced in an hashmap of pointers
+
+. Token type - string associated with what the string is
+
+. Lexeme - this holds the string of the token
+
+. Thisholds the actual value
+
+. Line - this holds the line that this token occurs on
+
+## Curent Ideas for potential tokens
+```javascript
+// single-character tokens
+'Left_parent', 'right_paren', 'left_brace', 'comma',
+'dot', 'minus', 'plus', 'semicolon', 'slash', 'star'
+
+// one or two character tokens
+'bang', 'bang_equal', 'equal', 'equal_equal', 
+'greater', 'greater_equal', 'less', 'less_equal'
+
+// literals
+'identifier', 'string', 'number', 'boolean'
+
+// keywords
+'and', 'else', 'false', 'func', 'for', 'if', 
+'null', 'or', 'print', 'return', 'true', 'num', 
+'nums', 'tf', 'char' 'chars', 'while'
+```
