@@ -20,9 +20,31 @@ void add_line(char ***lines, size_t *size, size_t *capacity, char *line) {
     	(*size)++;
 }
 
+
+void fileTokenizer(char** source) {
+	//grabs each line
+	int j = 0;
+	while (source[j] != NULL) {
+		//grabs and prints each character individually from each line
+		for (int i = 0; i < strlen(source[j]); i++) {
+			printf("%c\n", source[j][i]);
+		}
+
+		j++;
+	}
+}
+
+void promptTokenizer(char* source) {
+	// grabs and prints each character individually from each line
+	for ( int i = 0; i < strlen(source); i++) {
+		printf("%c\n", source[i]);
+	}
+}
+
+// Function that is at the root of reading gale source file 
 void runFile(char* path) {
 
-	printf("execute '%s' (it currently just reads and stores the script from path)\n", path);
+	printf("execute '%s' (currently printing one character at a time as we build towards tokenization):\n", path);
 
 	// creates pointer to read file or exits if there is an issue
 	FILE *file = fopen(path, "r");
@@ -57,9 +79,13 @@ void runFile(char* path) {
     	free(line);
     	fclose(file);
 
+	// tokenization
+	fileTokenizer(galeFile);
+
 	//What we are left with at this point is a pointer called 'galeFile' that holds all the characters (script)from the file
 }
 
+// Function that is at the root of the terminal interactive mode
 void runPrompt() {
 	printf("*** Gale Interactive Execution Mode ***\n");
 
@@ -89,8 +115,11 @@ void runPrompt() {
                 		break;
             		}
 
-            		// Print the stored line
-            		printf("execute '%s' (it currently just reads and displays the entered line)\n", buffer);
+	
+			printf("execute '%s' (currently printing one character at a time as we build towards tokenization):\n", buffer);
+            		
+			// tokenization
+			promptTokenizer(buffer);
 
 		} else {
             		printf("Error reading input.\n");
@@ -100,10 +129,12 @@ void runPrompt() {
 
     	// Free the allocated memory
 	free(buffer);
-}	
+}
+
 int main(int argc, char* argv[]) {
 
 	//                                  *** Argument Handling ***
+	//
 
 	// if more than one argument besides the executable file name is passed the program exits
 	if(argc > 2) {
